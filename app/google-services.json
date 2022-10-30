@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "36711228780",
+    "project_id": "ogartiiwwan-kutaa-7ffaa",
+    "storage_bucket": "ogartiiwwan-kutaa-7ffaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36711228780:android:0dedc4307ef1a90d6cff49",
+        "android_client_info": {
+          "package_name": "com.beckytech.ogartiiwwankutaa7ffaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "36711228780-46jqtqu5i5b9vsulc0q164fgfh7meij1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKGZLKL04qRDol-6nS3f-yB4OprSXHiiw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "36711228780-46jqtqu5i5b9vsulc0q164fgfh7meij1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
