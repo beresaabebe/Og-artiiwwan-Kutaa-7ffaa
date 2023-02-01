@@ -22,7 +22,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:background">@drawable/og7</item>
+        <item name="android:background">@drawable/og7_splash</item>
     </style>
 
     <style name="MyAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
