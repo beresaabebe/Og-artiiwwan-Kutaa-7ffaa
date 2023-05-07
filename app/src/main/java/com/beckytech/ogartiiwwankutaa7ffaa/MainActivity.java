@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.beckytech.ogartiiwwankutaa7ffaa.activity.AboutActivity;
 import com.beckytech.ogartiiwwankutaa7ffaa.activity.BookDetailActivity;
+import com.beckytech.ogartiiwwankutaa7ffaa.activity.PrivacyActivity;
 import com.beckytech.ogartiiwwankutaa7ffaa.adapter.Adapter;
 import com.beckytech.ogartiiwwankutaa7ffaa.adapter.MoreAppsAdapter;
 import com.beckytech.ogartiiwwankutaa7ffaa.contents.ContentEndPage;
@@ -169,22 +170,28 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
                     .setBackground(getResources().getDrawable(R.drawable.nav_header_bg, null))
                     .show();
         }
+        if (item.getItemId() == R.id.action_privacy) {
+            showAdWithDelay();
+            startActivity(new Intent(this, PrivacyActivity.class));
+        }
     }
-
     @Override
     public void clickedBook(Model model) {
         showAdWithDelay();
         startActivity(new Intent(this, BookDetailActivity.class).putExtra("data", model));
     }
-
     private void callAds() {
-//        513372960928869_513374324262066
-        AdView adView = new AdView(this, "526279959592907_526280682926168", AdSize.BANNER_HEIGHT_50);
+        AdView adView_between = new AdView(this, "526279959592907_579106850976884", AdSize.RECTANGLE_HEIGHT_250);
+        LinearLayout adContainer_between = findViewById(R.id.banner_container_between);
+        adContainer_between.addView(adView_between);
+        adView_between.loadAd();
+
+        AdView adView = new AdView(this, "526279959592907_526280579592845", AdSize.BANNER_HEIGHT_50);
         LinearLayout adContainer = findViewById(R.id.banner_container);
         adContainer.addView(adView);
         adView.loadAd();
 
-        interstitialAd = new InterstitialAd(this, "526279959592907_526280766259493");
+        interstitialAd = new InterstitialAd(this, "526279959592907_526280622926174");
         // Create listeners for the Interstitial Ad
         InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
             @Override

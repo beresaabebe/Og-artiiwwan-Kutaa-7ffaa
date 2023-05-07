@@ -96,13 +96,18 @@ public class AboutActivity extends AppCompatActivity implements AboutAdapter.OnL
     private void callAds() {
         AudienceNetworkAds.initialize(this);
 
+        AdView adView_rectangle = new AdView(this, "526279959592907_579108924310010", AdSize.RECTANGLE_HEIGHT_250);
+        LinearLayout adContainer_rect = findViewById(R.id.banner_container_rect);
+        adContainer_rect.addView(adView_rectangle);
+        adView_rectangle.loadAd();
+
 //        513372960928869_513374324262066
-        adView = new AdView(this, "526279959592907_526280579592845", AdSize.BANNER_HEIGHT_50);
+        adView = new AdView(this, "526279959592907_526280682926168", AdSize.BANNER_HEIGHT_50);
         LinearLayout adContainer = findViewById(R.id.banner_container);
         adContainer.addView(adView);
         adView.loadAd();
 
-        interstitialAd = new InterstitialAd(this, "526279959592907_526280622926174");
+        interstitialAd = new InterstitialAd(this, "526279959592907_526280766259493");
         // Create listeners for the Interstitial Ad
         InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
             @Override

@@ -40,7 +40,7 @@
                 android:ellipsize="end"
                 android:fontFamily="serif"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:id="@+id/title"/>
 
             <TextView
@@ -52,7 +52,7 @@
                 android:textStyle="italic"
                 android:fontFamily="serif"
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:id="@+id/subTitle"/>
 
         </LinearLayout>
