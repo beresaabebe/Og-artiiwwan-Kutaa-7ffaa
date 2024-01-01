@@ -22,6 +22,7 @@
                 android:id="@+id/toolbar"
                 style="@style/MyToolBar"
                 android:layout_width="match_parent"
+                app:titleTextColor="@color/white"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/nav_header_bg">
 

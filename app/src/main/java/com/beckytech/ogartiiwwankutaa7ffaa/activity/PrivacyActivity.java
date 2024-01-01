@@ -23,7 +23,7 @@ public class PrivacyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_privacy);
 
         ImageButton ib_back = findViewById(R.id.ib_back);
-        ib_back.setOnClickListener(view -> onBackPressed());
+        ib_back.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
         ProgressBar progressBar = findViewById(R.id.progress_horizontal);
         progressBar.setVisibility(View.GONE);
 
@@ -35,7 +35,7 @@ public class PrivacyActivity extends AppCompatActivity {
         activity_privacy.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         activity_privacy.getSettings().getLoadsImagesAutomatically();
         activity_privacy.getSettings().setJavaScriptEnabled(true);
-        activity_privacy.setWebViewClient(new WebViewClient(){
+        activity_privacy.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);

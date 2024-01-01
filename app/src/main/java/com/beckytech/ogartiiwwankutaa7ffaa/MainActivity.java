@@ -1,12 +1,12 @@
 package com.beckytech.ogartiiwwankutaa7ffaa;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,16 +23,11 @@ import com.beckytech.ogartiiwwankutaa7ffaa.activity.AboutActivity;
 import com.beckytech.ogartiiwwankutaa7ffaa.activity.BookDetailActivity;
 import com.beckytech.ogartiiwwankutaa7ffaa.activity.PrivacyActivity;
 import com.beckytech.ogartiiwwankutaa7ffaa.adapter.Adapter;
-import com.beckytech.ogartiiwwankutaa7ffaa.adapter.MoreAppsAdapter;
 import com.beckytech.ogartiiwwankutaa7ffaa.contents.ContentEndPage;
 import com.beckytech.ogartiiwwankutaa7ffaa.contents.ContentStartPage;
-import com.beckytech.ogartiiwwankutaa7ffaa.contents.MoreAppImages;
-import com.beckytech.ogartiiwwankutaa7ffaa.contents.MoreAppUrl;
-import com.beckytech.ogartiiwwankutaa7ffaa.contents.MoreAppsName;
 import com.beckytech.ogartiiwwankutaa7ffaa.contents.SubTitleContents;
 import com.beckytech.ogartiiwwankutaa7ffaa.contents.TitleContents;
 import com.beckytech.ogartiiwwankutaa7ffaa.model.Model;
-import com.beckytech.ogartiiwwankutaa7ffaa.model.MoreAppsModel;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdSize;
@@ -45,18 +41,11 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements Adapter.onBookClicked, MoreAppsAdapter.MoreAppsClicked {
-    InterstitialAd interstitialAd;
-    String TAG = MainActivity.class.getSimpleName();
-    private final MoreAppImages images = new MoreAppImages();
-    private final MoreAppUrl url = new MoreAppUrl();
-    private final MoreAppsName appsName = new MoreAppsName();
-    private List<MoreAppsModel> moreAppsModelList;
+public class MainActivity extends AppCompatActivity implements Adapter.onBookClicked {
+    private InterstitialAd interstitialAd;
+    private final String TAG = MainActivity.class.getSimpleName();
     private List<Model> modelList;
-    private final TitleContents titleContents = new TitleContents();
-    private final SubTitleContents subTitleContent = new SubTitleContents();
-    private final ContentStartPage startPage = new ContentStartPage();
-    private final ContentEndPage endPage = new ContentEndPage();
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +60,10 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         drawerToggle.syncState();
+        drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
         drawerLayout.addDrawerListener(drawerToggle);
 
         NavigationView navigationView = findViewById(R.id.navigationView);
@@ -86,40 +76,23 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
         getData();
         Adapter adapter = new Adapter(modelList, this);
         recyclerView.setAdapter(adapter);
-
-        RecyclerView moreAppsRecyclerView = findViewById(R.id.moreAppsRecycler);
-        getMoreApps();
-        MoreAppsAdapter moreAppsAdapter = new MoreAppsAdapter(moreAppsModelList, this);
-        moreAppsRecyclerView.setAdapter(moreAppsAdapter);
-    }
-
-    private void getMoreApps() {
-        moreAppsModelList = new ArrayList<>();
-        for (int i = 0; i < appsName.appNames.length; i++) {
-            moreAppsModelList.add(new MoreAppsModel(appsName.appNames[i], url.url[i], images.images[i]));
-        }
     }
 
     private void getData() {
         modelList = new ArrayList<>();
-        for (int i =0; i < titleContents.title.length; i++) {
-            modelList.add(new Model(titleContents.title[i].substring(0,1).toUpperCase()+""+titleContents.title[i].substring(1).toLowerCase(),
-                    subTitleContent.subTitle[i].substring(0,1).toUpperCase()+""+subTitleContent.subTitle[i].substring(1),
-                   startPage.pageStart[i],
-                    endPage.pageEnd[i]));
+        for (int i = 0; i < TitleContents.title.length; i++) {
+            modelList.add(new Model(TitleContents.title[i].substring(0, 1).toUpperCase() +
+                    TitleContents.title[i].substring(1).toLowerCase(),
+                    SubTitleContents.subTitle[i].substring(0, 1).toUpperCase() +
+                            SubTitleContents.subTitle[i].substring(1),
+                    ContentStartPage.pageStart[i],
+                    ContentEndPage.pageEnd[i]));
         }
-    }
-
-    @Override
-    public void appClicked(MoreAppsModel model) {
-        showAdWithDelay();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(model.getUrl()));
-        startActivity(intent);
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     void MenuOptions(MenuItem item) {
+        drawerLayout.closeDrawer(GravityCompat.START);
         if (item.getItemId() == R.id.action_about_us) {
             showAdWithDelay();
             startActivity(new Intent(this, AboutActivity.class));
@@ -148,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
 
         if (item.getItemId() == R.id.action_update) {
             showAdWithDelay();
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            int lastVersion = pref.getInt("lastVersion", 0);
+            SharedPreferences pref = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+            int lastVersion = pref.getInt("lastVersion", 4);
             String url = "https://play.google.com/store/apps/details?id=" + getPackageName();
             if (lastVersion < BuildConfig.VERSION_CODE) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -159,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
             }
         }
         if (item.getItemId() == R.id.action_exit) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.MyAlertDialog);
             builder.setTitle("Exit")
                     .setMessage("Do you want to close?")
                     .setPositiveButton("Yes", (dialog, which) -> {
@@ -175,11 +148,13 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
             startActivity(new Intent(this, PrivacyActivity.class));
         }
     }
+
     @Override
     public void clickedBook(Model model) {
         showAdWithDelay();
         startActivity(new Intent(this, BookDetailActivity.class).putExtra("data", model));
     }
+
     private void callAds() {
         AdView adView_between = new AdView(this, "526279959592907_579106850976884", AdSize.RECTANGLE_HEIGHT_250);
         LinearLayout adContainer_between = findViewById(R.id.banner_container_between);
@@ -245,11 +220,11 @@ public class MainActivity extends AppCompatActivity implements Adapter.onBookCli
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             // Check if interstitialAd has been loaded successfully
-            if(interstitialAd == null || !interstitialAd.isAdLoaded()) {
+            if (interstitialAd == null || !interstitialAd.isAdLoaded()) {
                 return;
             }
             // Check if ad is already expired or invalidated, and do not show ad if that is the case. You will not get paid to show an invalidated ad.
-            if(interstitialAd.isAdInvalidated()) {
+            if (interstitialAd.isAdInvalidated()) {
                 return;
             }
             // Show the ad

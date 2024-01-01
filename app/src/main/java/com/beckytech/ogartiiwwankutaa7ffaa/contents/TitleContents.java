@@ -1,7 +1,7 @@
 package com.beckytech.ogartiiwwankutaa7ffaa.contents;
 
 public class TitleContents {
-    public String[] title = {
+    public static String[] title = {
             "HUBANNOO ARTISTAWAA",
             "Dandeettii KalaqaOg-Aartiiwwanii .",
             "Aadaafi Seenaa",

@@ -4,12 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.beckytech.ogartiiwwankutaa7ffaa.R;
+import com.beckytech.ogartiiwwankutaa7ffaa.contents.ContentEndPage;
+import com.beckytech.ogartiiwwankutaa7ffaa.contents.ContentStartPage;
+import com.beckytech.ogartiiwwankutaa7ffaa.contents.SubTitleContents;
+import com.beckytech.ogartiiwwankutaa7ffaa.contents.TitleContents;
 import com.beckytech.ogartiiwwankutaa7ffaa.model.Model;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -25,33 +32,79 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookDetailActivity extends AppCompatActivity {
-    InterstitialAd interstitialAd;
-    private final String TAG =  AboutActivity.class.getSimpleName();
-    AdView adView;
+    private final String TAG = AboutActivity.class.getSimpleName();
+    private InterstitialAd interstitialAd;
+    private AdView adView;
+    private PDFView pdfView;
+    private TextView subTitle;
+    private TextView title;
+    private int currentIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
-        callAds();
-
-        findViewById(R.id.back_book_detail).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.back_book_detail).setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         Intent intent = getIntent();
         Model model = (Model) intent.getSerializableExtra("data");
 
-        TextView title = findViewById(R.id.title_book_detail);
+        title = findViewById(R.id.title_book_detail);
+        subTitle = findViewById(R.id.sub_title_book_detail);
+        pdfView = findViewById(R.id.pdfView);
         title.setSelected(true);
-        title.setText(model.getTitle());
-
-        TextView subTitle = findViewById(R.id.sub_title_book_detail);
         subTitle.setSelected(true);
-        subTitle.setText(model.getSubTitle());
 
-        PDFView pdfView = findViewById(R.id.pdfView);
+        assert model != null;
+        currentIndex = getIndex(model.getTitle());
+        allContents(currentIndex);
 
-        int start = model.getStartPage();
-        int end = model.getEndPage();
+        ImageButton prevButton = findViewById(R.id.prevButton);
+        prevButton.setVisibility(View.INVISIBLE);
+        ImageButton nextButton = findViewById(R.id.nextButton);
+        nextButton.setVisibility(View.INVISIBLE);
+
+        prevButton.setOnClickListener(v -> {
+            if (currentIndex < TitleContents.title.length && currentIndex > 0) {
+                currentIndex = getIndex(TitleContents.title[currentIndex - 1]);
+                allContents(currentIndex);
+                if (nextButton.getVisibility() == View.INVISIBLE)
+                    nextButton.setVisibility(View.VISIBLE);
+            } else {
+                if (prevButton.getVisibility() == View.VISIBLE)
+                    prevButton.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Kun Boqonnaa jalqabaati!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        nextButton.setOnClickListener(v -> {
+            if (currentIndex < TitleContents.title.length - 1 && currentIndex >= 0) {
+                currentIndex = getIndex(TitleContents.title[currentIndex + 1]);
+                allContents(currentIndex);
+                if (prevButton.getVisibility() == View.INVISIBLE)
+                    prevButton.setVisibility(View.VISIBLE);
+            } else {
+                if (nextButton.getVisibility() == View.VISIBLE)
+                    nextButton.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Kun Boqonnaa xumuraati!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        new Handler().postDelayed(() -> {
+            prevButton.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
+        }, 3000);
+
+        callAds();
+    }
+
+    private void allContents(int currentIndex) {
+        title.setText(String.valueOf(TitleContents.title[currentIndex]));
+        subTitle.setText(String.valueOf(SubTitleContents.subTitle[currentIndex]));
+
+        int start = ContentStartPage.pageStart[currentIndex];
+        int end = ContentEndPage.pageEnd[currentIndex];
 
         List<Integer> list = new ArrayList<>();
 
@@ -75,9 +128,16 @@ public class BookDetailActivity extends AppCompatActivity {
                 .scrollHandle(new DefaultScrollHandle(this))
                 .load();
     }
+
+    private int getIndex(String title) {
+        for (int i = 0; i < TitleContents.title.length; i++) {
+            if (TitleContents.title[i].equalsIgnoreCase(title)) return i;
+        }
+        return -1;
+    }
+
     private void callAds() {
         AudienceNetworkAds.initialize(this);
-//        513372960928869_513374324262066
         adView = new AdView(this, "526279959592907_579106294310273", AdSize.BANNER_HEIGHT_50);
         LinearLayout adContainer = findViewById(R.id.banner_container);
         adContainer.addView(adView);
@@ -131,28 +191,6 @@ public class BookDetailActivity extends AppCompatActivity {
                 interstitialAd.buildLoadAdConfig()
                         .withAdListener(interstitialAdListener)
                         .build());
-    }
-
-    private void showAdWithDelay() {
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            // Check if interstitialAd has been loaded successfully
-            if(interstitialAd == null || !interstitialAd.isAdLoaded()) {
-                return;
-            }
-            // Check if ad is already expired or invalidated, and do not show ad if that is the case. You will not get paid to show an invalidated ad.
-            if(interstitialAd.isAdInvalidated()) {
-                return;
-            }
-            // Show the ad
-            interstitialAd.show();
-        }, 1000 * 60 * 2); // Show the ad after 15 minutes
-    }
-
-    @Override
-    public void onBackPressed() {
-        showAdWithDelay();
-        super.onBackPressed();
     }
 
     @Override
